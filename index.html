@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird</title>
+    <title>Flappy Bird by Lakshin Hemachandran</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="gameContainer">
+    <div id="introScreen">
+        <h1>Flappy Bird</h1>
+        <p>by Lakshin Hemachandran</p>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+    <div id="gameContainer" style="display: none;">
         <canvas id="gameCanvas" width="320" height="480"></canvas>
     </div>
     <script src="script.js"></script>
