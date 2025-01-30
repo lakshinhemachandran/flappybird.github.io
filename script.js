@@ -1,89 +1,163 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-
-// Load images
-const birdImg = new Image();
-const bgImg = new Image();
-const fgImg = new Image();
-const pipeNorthImg = new Image();
-const pipeSouthImg = new Image();
-
-birdImg.src = 'https://banner2.cleanpng.com/20190313/lbw/kisspng-314xelampaposs-profile-1713901635122.webp'; // Replace with your bird image URL
-bgImg.src = 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/089918d8-99ff-45de-a084-3fe85d0e3fcc/dg34rsu-29a3d144-dc3f-473e-a949-f73a4ba1ef7c.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA4OTkxOGQ4LTk5ZmYtNDVkZS1hMDg0LTNmZTg1ZDBlM2ZjY1wvZGczNHJzdS0yOWEzZDE0NC1kYzNmLTQ3M2UtYTk0OS1mNzNhNGJhMWVmN2MucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.zvNGmLdKoPJQgA8oJpbKhBRg-eCdzTc1j_Nceg1adY4'; // Replace with your background image URL
-pipeNorthImg.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAtFBMVEX///98s0Ky/1lonzi1/1p5rkHM/5AsLCyY206n8FRSiS46M0G14INYeD8/O0HH/4WJxUdelDNpojd7e3tCQkKysrJzc3M3Mzpje0pvbHJCPUZ6pk0zMzNyoEPg4OBhjzs2LD/U/5W//3ZsZXFre1kbGxul5V46Ojrp6emhxnew4Hp8r0eKwkyW01FQfDRZhjhUbkEQEBBqamrB7o6w5XVtmUhjh0ZJfSqT1ktne1JZbUdNXEOgpqyWAAAB3klEQVR4nO3YXU/TcBTAYba2W9nmFJzoXhiKsk0FfAeU7/+9/LNg4oWDjmTZKT5P0nN9fjc9aXd2Nqbd7bVarafNZjN/VpT5btH4t6yzl0aW7T/pP9/cNpugUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8ChXGp1BhfAoVxqdQYXwKFcanUGF8/09hnj/OwuliMnrf6/U+lGU5+3h4Ojs7XOHo/FMayef+wWK67b0rm55MBoNR99ZotBz3GAwGky/bXryyaQp8iPa2F68sFR6s72u9Codvbw2Hy1FFrQq739J75vssGY/PZqfju5xfjMc/kot+nQpfv0m34vjmGhbFbl6uOBVLRafTaOyne3E0qnHhqmv4d2GmMBKFCuNTqDA+hQrjU/i4CrNUeFXcIbu8TGOvtoXNPL957ndVu8LkuErZH2XNvg/775Kfr9bw6/q6Tn8x2vOXa5vP5yfbXryyxYsH2vbiAAAAAAAAAAAAAAAAAAAQwG9kZMxGMBLZywAAAABJRU5ErkJggg=='; // Replace with your pipe north image URL
-pipeSouthImg.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAACZCAMAAAB+KoMCAAAAvVBMVEX29vYApgAAAAB+zxAAowD8/PyRkZGysrIAogB90xQXqQZKvxSA0g9aWlprnCw5txJUxBbr/+twpC0JOAkNgA30/+J41RcvsQ58wiBFvBOGxjB+ui8xSBRmzxgkqwsVjxZqpB/IyMgVmRVdxRLR0dHk5ORn0BiHyTJumTWAtTkmmBhtzBN0vi9cyxgSlBUlrwsrOhkjQhIxRBxKSkpaey0yjBdElRw8nSBgripQpyZvlzxCqiBYtSkkhyX3/+vLflheAAADkklEQVR4nO3cDVfSUACH8YyRY1tBL2KYkuYLZppZaS9a3/9jBbt3xL1Iju2/0RnPr1OdAeMcnrPVvZe5R48AAAAAAAAA/P/aK7fqAirtoycrdtSUlu3Nxyu2SUpSekgpQ0oZUsqQUoaUMtOUp6/r9b65KV8krYlk/GvyR/Z3a277nhf988n73yHZaXzKupCSlIuRUoaUMqSUmUvZ8fiFE/8FeWVvYDebn7KzHTk2em7LJA6iQoa25Ulots/WIGWwMSuMvZQD9/ncon6W0mx/XIOUboFAlXJISlLmRUoZUsqQUqZ4yjAMg2D8O2fKqG/GkydhMN4vCEiZpQy6H4w4d0s7vtwz+52TcprSLjz2ljzhA3Oir8HEMX/Kjk0ZktIonHKQkNJVPiUnuMVRKcNRKVPfURmkwrCfrM16ZUVHZWTHkxfD1OU6rFdWlJKJo+wEJ6XuBCclR2Ve/FspwwkuU+MJno4nk5PQDDBJWXy2c2lss15ZOmX2hkwcy57gpOSozI2jUoaUMg+m9K9k4wRfZCZl6p6Urnia0lg2ZdQ3+zU45add46Xnatd15T1+5e/wELvf5+amXBlSktJHShlSypBShpQypNQ5PkgdfbGf7Ou+cf3KdbPvurGPX3vbC9nXnWYJD6zjVRfQsfegemo/4TM76+l6s5TYnfR0Yvt4t2NnPTlnOW+ylE27+dXUTEozF++6E8K5ZY1sAmmvs2w9tKxhv9uZSbnqj1yV+ZRuicUpE1K6Kj8qh6TkBF8WR6VMdSnN196B+R+clCVSRheHqd52qvuNlEVT/v2RerP9lpSFU9prhfZIScplkVKGlDKklKkwpVkRstdVkrLEuLJr9cz48jspS04cA+bgqpTMwUm5PFLKkFKGlDI1rVcmpCwxruwd9sYOYzu8ZL2yxHplkkzuh87EsXxK5uCkLIqUMqSUIaUM65UyNaxXGqxXsl6ZG3NwGVLKkFKG6ytlOCplWK+UqW5cGVsD4wcpub4yL+bgMqSUIaUMKWVIKVP1emWL9crSKSM7nhzY4SXjyjKznQ0z25nsxcSROfgSSClDShlSypBSpo71yhY/D14qZZQtVNrRJeNKZju5MQeXIaUMKWVIKUNKmeL3ZOukTyy8P/pl3+y4ht84/hztTIxu37nuzOOZ0Z19/HbkbvvO7H7ndvtX41Nmt7Fs/94ynnu2fP4T/g6Lnm/sfSsBAAAAAACARvsDCwocuFTzJMcAAAAASUVORK5CYII='; // Replace with your pipe south image URL
-
-// Game variables
-let gap = 85;
-let constant;
-
-let birdX = 10;
-let birdY = 150;
-let gravity = 1.5;
-let score = 0;
-
-// Pipe coordinates
-let pipes = [];
-pipes[0] = {
-    x: canvas.width,
-    y: 0
-};
-
-// Control the bird
-document.addEventListener('keydown', moveUp);
-document.addEventListener('click', moveUp);
-
-function moveUp() {
-    birdY -= 25;
-}
-
-// Draw function
-function draw() {
-    ctx.drawImage(bgImg, 0, 0);
-
-    for (let i = 0; i < pipes.length; i++) {
-        constant = pipeNorthImg.height + gap;
-        ctx.drawImage(pipeNorthImg, pipes[i].x, pipes[i].y);
-        ctx.drawImage(pipeSouthImg, pipes[i].x, pipes[i].y + constant);
-
-        pipes[i].x--;
-
-        if (pipes[i].x == 125) {
-            pipes.push({
-                x: canvas.width,
-                y: Math.floor(Math.random() * pipeNorthImg.height) - pipeNorthImg.height
-            });
-        }
-
-        // Detect collision
+// Background scrolling speed
+let move_speed = 3;
+  
+// Gravity constant value
+let gravity = 0.5;
+  
+// Getting reference to the bird element
+let bird = document.querySelector('.bird');
+  
+// Getting bird element properties
+let bird_props = bird.getBoundingClientRect();
+let background =
+    document.querySelector('.background')
+            .getBoundingClientRect();
+  
+// Getting reference to the score element
+let score_val =
+    document.querySelector('.score_val');
+let message =
+    document.querySelector('.message');
+let score_title =
+    document.querySelector('.score_title');
+  
+// Setting initial game state to start
+let game_state = 'Start';
+  
+// Add an eventlistener for key presses
+document.addEventListener('keydown', (e) => {
+  
+  // Start the game if enter key is pressed
+  if (e.key == 'Enter' &&
+      game_state != 'Play') {
+    document.querySelectorAll('.pipe_sprite')
+              .forEach((e) => {
+      e.remove();
+    });
+    bird.style.top = '40vh';
+    game_state = 'Play';
+    message.innerHTML = '';
+    score_title.innerHTML = 'Score : ';
+    score_val.innerHTML = '0';
+    play();
+  }
+});
+function play() {
+  function move() {
+    
+    // Detect if game has ended
+    if (game_state != 'Play') return;
+    
+    // Getting reference to all the pipe elements
+    let pipe_sprite = document.querySelectorAll('.pipe_sprite');
+    pipe_sprite.forEach((element) => {
+      
+      let pipe_sprite_props = element.getBoundingClientRect();
+      bird_props = bird.getBoundingClientRect();
+      
+      // Delete the pipes if they have moved out
+      // of the screen hence saving memory
+      if (pipe_sprite_props.right <= 0) {
+        element.remove();
+      } else {
+        // Collision detection with bird and pipes
         if (
-            birdX + birdImg.width >= pipes[i].x &&
-            birdX <= pipes[i].x + pipeNorthImg.width &&
-            (birdY <= pipes[i].y + pipeNorthImg.height || birdY + birdImg.height >= pipes[i].y + constant) ||
-            birdY + birdImg.height >= canvas.height - fgImg.height
+          bird_props.left < pipe_sprite_props.left +
+          pipe_sprite_props.width &&
+          bird_props.left +
+          bird_props.width > pipe_sprite_props.left &&
+          bird_props.top < pipe_sprite_props.top +
+          pipe_sprite_props.height &&
+          bird_props.top +
+          bird_props.height > pipe_sprite_props.top
         ) {
-            location.reload(); // Reload the page
+          
+          // Change game state and end the game
+          // if collision occurs
+          game_state = 'End';
+          message.innerHTML = 'Press Enter To Restart';
+          message.style.left = '28vw';
+          return;
+        } else {
+          // Increase the score if player
+          // has the successfully dodged the 
+          if (
+            pipe_sprite_props.right < bird_props.left &&
+            pipe_sprite_props.right + 
+            move_speed >= bird_props.left &&
+            element.increase_score == '1'
+          ) {
+            score_val.innerHTML = +score_val.innerHTML + 1;
+          }
+          element.style.left = 
+            pipe_sprite_props.left - move_speed + 'px';
         }
+      }
+    });
 
-        if (pipes[i].x == 5) {
-            score++;
-        }
+    requestAnimationFrame(move);
+  }
+  requestAnimationFrame(move);
+
+  let bird_dy = 0;
+  function apply_gravity() {
+    if (game_state != 'Play') return;
+    bird_dy = bird_dy + gravity;
+    document.addEventListener('keydown', (e) => {
+      if (e.key == 'ArrowUp' || e.key == ' ') {
+        bird_dy = -7.6;
+      }
+    });
+
+    // Collision detection with bird and
+    // window top and bottom
+
+    if (bird_props.top <= 0 ||
+        bird_props.bottom >= background.bottom) {
+      game_state = 'End';
+      message.innerHTML = 'Press Enter To Restart';
+      message.style.left = '28vw';
+      return;
     }
+    bird.style.top = bird_props.top + bird_dy + 'px';
+    bird_props = bird.getBoundingClientRect();
+    requestAnimationFrame(apply_gravity);
+  }
+  requestAnimationFrame(apply_gravity);
 
-    ctx.drawImage(fgImg, 0, canvas.height - fgImg.height);
-    ctx.drawImage(birdImg, birdX, birdY);
-
-    birdY += gravity;
-
-    ctx.fillStyle = '#000';
-    ctx.font = '20px Arial';
-    ctx.fillText('Score: ' + score, 10, canvas.height - 20);
-
-    requestAnimationFrame(draw);
-}
-
-function startGame() {
-    document.getElementById('introScreen').style.display = 'none';
-    document.getElementById('gameContainer').style.display = 'flex';
-    draw();
+  let pipe_seperation = 0;
+  
+  // Constant value for the gap between two pipes
+  let pipe_gap = 35;
+  function create_pipe() {
+    if (game_state != 'Play') return;
+    
+    // Create another set of pipes
+    // if distance between two pipe has exceeded
+    // a predefined value
+    if (pipe_seperation > 115) {
+      pipe_seperation = 0
+      
+      // Calculate random position of pipes on y axis
+      let pipe_posi = Math.floor(Math.random() * 43) + 8;
+      let pipe_sprite_inv = document.createElement('div');
+      pipe_sprite_inv.className = 'pipe_sprite';
+      pipe_sprite_inv.style.top = pipe_posi - 70 + 'vh';
+      pipe_sprite_inv.style.left = '100vw';
+      
+      // Append the created pipe element in DOM
+      document.body.appendChild(pipe_sprite_inv);
+      let pipe_sprite = document.createElement('div');
+      pipe_sprite.className = 'pipe_sprite';
+      pipe_sprite.style.top = pipe_posi + pipe_gap + 'vh';
+      pipe_sprite.style.left = '100vw';
+      pipe_sprite.increase_score = '1';
+      
+      // Append the created pipe element in DOM
+      document.body.appendChild(pipe_sprite);
+    }
+    pipe_seperation++;
+    requestAnimationFrame(create_pipe);
+  }
+  requestAnimationFrame(create_pipe);
 }
