@@ -1,20 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird by Lakshin Hemachandran</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div id="introScreen">
-        <h1>Flappy Bird</h1>
-        <p>by Lakshin Hemachandran</p>
-        <button onclick="startGame()">Start Game</button>
+    <div class="background"></div>
+    <img class="bird" src="logo.png" alt="bird-img">
+    <div class="message">
+        PRESS ENTER
     </div>
-    <div id="gameContainer" style="display: none;">
-        <canvas id="gameCanvas" width="320" height="480"></canvas>
+    <div class="score">
+        <span class="score_title"></span>
+        <span class="score_val"></span>
     </div>
-    <script src="script.js"></script>
+    <script src="gfg.js"></script>
 </body>
+
 </html>
