@@ -8,15 +8,15 @@ const fgImg = new Image();
 const pipeNorthImg = new Image();
 const pipeSouthImg = new Image();
 
-birdImg.src = 'https://example.com/bird.png'; // Replace with your bird image URL
-bgImg.src = 'https://example.com/bg.png'; // Replace with your background image URL
-fgImg.src = 'https://example.com/fg.png'; // Replace with your foreground image URL
-pipeNorthImg.src = 'https://example.com/pipeNorth.png'; // Replace with your pipe north image URL
-pipeSouthImg.src = 'https://example.com/pipeSouth.png'; // Replace with your pipe south image URL
+birdImg.src = 'https://i.imgur.com/oPp8P2t.png'; // Replace with your bird image URL
+bgImg.src = 'https://i.imgur.com/BwzqJd1.png'; // Replace with your background image URL
+fgImg.src = 'https://i.imgur.com/3k7S7KJ.png'; // Replace with your foreground image URL
+pipeNorthImg.src = 'https://i.imgur.com/3yB9rT4.png'; // Replace with your pipe north image URL
+pipeSouthImg.src = 'https://i.imgur.com/Cc5q4yZ.png'; // Replace with your pipe south image URL
 
 // Game variables
 let gap = 85;
-let constant = pipeNorthImg.height + gap;
+let constant;
 
 let birdX = 10;
 let birdY = 150;
@@ -42,6 +42,7 @@ function draw() {
     ctx.drawImage(bgImg, 0, 0);
 
     for (let i = 0; i < pipes.length; i++) {
+        constant = pipeNorthImg.height + gap;
         ctx.drawImage(pipeNorthImg, pipes[i].x, pipes[i].y);
         ctx.drawImage(pipeSouthImg, pipes[i].x, pipes[i].y + constant);
 
